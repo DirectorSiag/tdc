@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self'; script-src 'self' 'unsafe-eval'">
+    <!-- Mantener esto para que funcione el servidor -->
+    <meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <title>TDC</title>
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/style.css">
+  </head>
+  <body class="body" id="body">
+    
+    <!-- <div class="radios">
+      <label>Escala crudo</label><br>
+      <input type="radio" name="escala" value="2" > 2 <br>
+      <input type="radio" name="escala" value="4" > 4 <br>
+      <input type="radio" name="escala" value="8" > 8 <br>
+      <input type="radio" name="escala" value="16" > 16 <br>
+      <input type="radio" name="escala" value="32" checked> 32 <br>
+      <input type="radio" name="escala" value="64" > 64 <br>
+      <input type="radio" name="escala" value="128" > 128 <br>
+      <input type="radio" name="escala" value="256"> 256 <br>
+    </div> -->
+
+    <!-- <div class="labels">
+      <label><input type="checkbox" id="chkSintetico" name="sintetico" checked> Sintético</label><br>
+      <label><input type="checkbox" id="chkCrudo" name="crudo" checked> Crudo</label><br>
+    </div> -->
+    <br><br><br><br><br>
+
+    <div class="checker false">
+      <img class="cruz" src="images/cruz.png" alt="cruz">
+      <img class="tilde" src="images/tilde.png" alt="tilde">
+    </div>
+    
+    <div class="labels">
+      <div class="label">
+        <p>Azimut</p>
+        <input type="text" id="azimut" maxlength="5" placeholder="359.9">
+      </div>
+      <div class="label">
+        <p>Distancia</p>
+        <input type="text" id="distancia" maxlength="5" placeholder="256.0">
+      </div>
+    </div>
+    <br/><br/>
+
+    <div class="open_manual_button">
+      <p>Abrir manual de usuario</p>
+    </div>
+    <br/><br/>
+    
+     <div class="contenedor_crudo">
+
+        <!-- <canvas id="canvas_crudo" width="800" height="800"></canvas> -->
+        <canvas id="canvas" width="800" height="800"></canvas>
+
+
+      
+    </div>   
+    <div class="contenedor_sintetico">      
+      <!-- <canvas id="canvas_sintetico" width="800" height="800"></canvas> -->      
+   
+      <div class="circulos-container" id="circulo">
+          <div class="circulo"></div>
+          <div class="circulo"></div>
+          <div class="circulo"></div>
+          <div class="circulo"></div>
+      </div>
+   
+    </div>
+
+   
+    
+
+    <!-- <div class="polar-graph"></div> -->
+    
+    <script src="js/script.js"></script>
+
+  </body>
+  <!--<script src="./renderer.js"></script>-->
+</html>
