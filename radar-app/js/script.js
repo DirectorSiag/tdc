@@ -177,7 +177,19 @@ window.onload = function () {
 
     const workerSocket = new Worker('./js/wkrSocket.js');
 
-    
+
+    // PARA PRUEBA DE SINTETICO
+    radar.graficar_texto(0,0,"1");    
+    radar.graficar_texto(1,1,"2");    
+    radar.graficar_texto(2,2,"3");    
+    radar.graficar_texto(3,3,"4");    
+
+    radar.graficar_texto(0,15,"NORTE");    
+    radar.graficar_texto(15,0,"ESTE");    
+    radar.graficar_texto(0,-15,"SUR");    
+    radar.graficar_texto(-15,0,"OESTE");
+
+    radar.graficar_linea([0,0],[25,25],"solid");
 
     workerSocket.onmessage = (event) => {
         graficarPunto(event.data);
@@ -238,14 +250,14 @@ window.onload = function () {
 
      //   contextCrudo.putImageData(canvasData, 0, 0);
 
-        escalaActual = 16;//radar.escala_DM; // * 4;
+        escalaActual = radar.escala_DM; // * 4;
         //escalaActual = 32;
         // escalaActual = document.querySelector('input[name="escala"]:checked').value; //*4;
-        // if (escala != escalaActual) {
-        //     contextCrudo.clearRect(0, 0, canvasCrudo.width, canvasCrudo.height);
-        //     ctx.clearRect(0, 0, canvas.width, canvas.height)
-             escala = escalaActual;
-        // }
+        if (escala != escalaActual) {
+            contextCrudo.clearRect(0, 0, canvasCrudo.width, canvasCrudo.height);
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            escala = escalaActual;
+        }
 
         // let distancia = 256 - escala;
         // let distanciaEnPixel = (distancia * (canvasCrudo.width / 2)) / 256;
@@ -266,7 +278,7 @@ window.onload = function () {
     // Agregar un observador
     coordenadas.addObserver((x, y) => {
         //console.log(`Las coordenadas han cambiado a: ${x}, ${y}`);
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
         copiarCanvas();
     });
    

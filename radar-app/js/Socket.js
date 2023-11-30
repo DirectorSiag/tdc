@@ -153,7 +153,7 @@ class Socket {
         try {
             connected = this.sockets[namespace].connected;
         } catch (error) {
-            console.log(namespace + " en puerto " + this.PORT_HOST + " no conectado.");
+            // console.log(namespace + " en puerto " + this.PORT_HOST + " no conectado.");
             connected = false;
         }
 
