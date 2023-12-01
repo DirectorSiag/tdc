@@ -344,4 +344,3 @@ dist
 # End of https://www.toptal.com/developers/gitignore/api/virtualenv,python,visualstudiocode
 
 new-software-tdc/share
-.config

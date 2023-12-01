@@ -405,7 +405,6 @@ class RadarWidget {
                 if (event.button == 0) { // Click izquierdo
                     console.log("Toco click izquierdo");
                     if ($this.ROLE == "main") {
-                        console.log("jup this is main");
                         var delta_x = mouse_x - ($this.coordenada_rolling_L[0] - $this.origen_x) * 256 / $this.escala_DM;
                         var delta_y = mouse_y - ($this.coordenada_rolling_L[1] - $this.origen_y) * 256 / $this.escala_DM;
                     } else {
@@ -415,6 +414,8 @@ class RadarWidget {
 
                     let control_var_x = $this.calc_control_var(delta_x);
                     let control_var_y = $this.calc_control_var(delta_y);
+
+                    console.log("control_var_x: "+control_var_x);
 
                     if ($this.ROLE == "main") {
                         $this.rollball_L_DX = control_var_x;
