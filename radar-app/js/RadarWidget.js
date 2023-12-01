@@ -415,8 +415,6 @@ class RadarWidget {
                     let control_var_x = $this.calc_control_var(delta_x);
                     let control_var_y = $this.calc_control_var(delta_y);
 
-                    console.log("control_var_x: "+control_var_x);
-
                     if ($this.ROLE == "main") {
                         $this.rollball_L_DX = control_var_x;
                         $this.rollball_L_DY = control_var_y;

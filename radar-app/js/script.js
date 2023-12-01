@@ -215,16 +215,16 @@ window.onload = function () {
     let centroCanvasX = canvasCrudo.width / 2;
     let centroCanvasY = canvasCrudo.height / 2;
 
-    // let canvasData = contextCrudo.getImageData(0, 0, canvasCrudo.width, canvasCrudo.height);
+    /* let canvasData = contextCrudo.getImageData(0, 0, canvasCrudo.width, canvasCrudo.height);
 
-    // function drawPixel(x ,y ,r,g,b,a){
-    //     var index = (x + y * canvasCrudo.width) * 4;
+     function drawPixel(x ,y ,r,g,b,a){
+         var index = (x + y * canvasCrudo.width) * 4;
 
-    //     canvasData.data[index + 0] = r;
-    //     canvasData.data[index + 1] = g;
-    //     canvasData.data[index + 2] = b;
-    //     canvasData.data[index + 3] = a;
-    // }
+         canvasData.data[index + 0] = r;
+         canvasData.data[index + 1] = g;
+         canvasData.data[index + 2] = b;
+         canvasData.data[index + 3] = a;
+    }*/
 
     function graficarPunto(data) {
 
@@ -237,14 +237,8 @@ window.onload = function () {
             let indice = escalaOrigen.indexOf(escala);
             
             if (coordX != "H") {
-              //  drawPixel(coordX, coordY, 255, 0, 0, 255);
-
-                contextCrudo.beginPath();
-                contextCrudo.arc(coordX, coordY, escalaTamaño[indice], 0, 2 * Math.PI);
-             //  contextCrudo.arc(coordX, coordY, 1, 0, 2 * Math.PI);//Cambiar tamaño pixel
                 contextCrudo.fillStyle = ESCALA_COLOR[color];
-                contextCrudo.fill();
-                contextCrudo.closePath();
+                contextCrudo.fillRect(coordX,coordY,1,1);
             }
         });
 
