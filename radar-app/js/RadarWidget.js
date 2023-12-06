@@ -684,7 +684,7 @@ class RadarWidget {
         var last_child = this.add_element(this.text_list, "p", {
             "className": "text",
             "textContent": texto,
-            "hidden": true
+            "hidden": false
         });
 
         this.formatted_text.push([x,y,texto]);

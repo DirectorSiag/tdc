@@ -220,21 +220,23 @@ window.onload = function () {
     let centroCanvasX = canvasCrudo.width / 2;
     let centroCanvasY = canvasCrudo.height / 2;
 
-    graficarSintetico(150,150);
+    graficarSintetico(0,0);
 
     function graficarSintetico(x,y){
         let textos = radar.getFormattedText();        
         //Funcion colocar textos en canvas
-        ctx.font = "10px serif";
-        ctx.fillStyle = "white";
+        contextCrudo.font = "30px serif";
+        contextCrudo.fillStyle = "white";
         let textData; let text_x; let text_y;
         textos.forEach((text) => {
             textData = text[2];
-            text_x =(text[0]*(400/escala))+400-x;
-            text_y =(-text[1]*(400/escala))+400-y;
-            ctx.textAlign = "start";
-            ctx.fillText(textData,text_x+15,text_y+8);
-        });       
+            text_x =(text[0]*escala)+centroCanvasX-x;
+            text_y =(-text[1]*escala)+centroCanvasY-y;
+            contextCrudo.textAlign = "start";
+            contextCrudo.fillText(textData,text_x+15,text_y+8);
+            console.table([textData,text_x,text_y]);
+        });   
+        copiarCanvas();    
     }
 
     function graficarPunto(data) {
@@ -330,10 +332,6 @@ window.onload = function () {
         let anchoEnPixel = (ancho * (canvasCrudo.width / 2)) / 256;
 
         ctx.drawImage(canvasCrudo, sx, sy, anchoEnPixel, anchoEnPixel, 0, 0, canvas.width, canvas.height);
-        console.table([sx,sy]);
-        let ax = centroCanvasX;
-        let ay = centroCanvasY;
-        graficarSintetico(ax,ay);
     }
    
 
