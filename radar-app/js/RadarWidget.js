@@ -43,6 +43,8 @@ class RadarWidget {
 
         this.rollball_DX_temp = undefined;
         this.rollball_DY_temp = undefined;
+
+        this.formatted_text = [];
         
         // Diccionarios
         this.LPD_symbols_table = {
@@ -412,6 +414,11 @@ class RadarWidget {
                         var delta_y = mouse_y - ($this.coordenada_rolling_R[1] - $this.origen_y) * 256 / $this.escala_DM;
                     }
 
+                    console.log("Delta_x: "+delta_x); 
+                    console.log("Mouse_x: "+mouse_x); 
+                    console.log("coordenada_rolling_L[0]: "+$this.coordenada_rolling_L[0]); 
+                    console.log("coordenada_rolling_L[1]: "+$this.coordenada_rolling_L[1]); 
+
                     let control_var_x = $this.calc_control_var(delta_x);
                     let control_var_y = $this.calc_control_var(delta_y);
 
@@ -676,10 +683,17 @@ class RadarWidget {
         */
         var last_child = this.add_element(this.text_list, "p", {
             "className": "text",
-            "textContent": texto
+            "textContent": texto,
+            "hidden": true
         });
 
+        this.formatted_text.push([x,y,texto]);
+
         this.center_to_radar(x, y, last_child, x_delta_px, x_delta_py);
+    }
+
+    getFormattedText(){
+        return this.formatted_text;
     }
 
     plot_imagen(x, y, nombre_png, format) {

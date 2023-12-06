@@ -179,10 +179,13 @@ window.onload = function () {
 
 
     // PARA PRUEBA DE SINTETICO
-    radar.graficar_texto(0,0,"1");    
-    radar.graficar_texto(1,1,"2");    
-    radar.graficar_texto(2,2,"3");    
-    radar.graficar_texto(3,3,"4");    
+    
+    
+    radar.graficar_texto(0,0,"0");    
+    radar.graficar_texto(1,1,"1");    
+    radar.graficar_texto(2,2,"2");    
+    radar.graficar_texto(3,3,"3");    
+    radar.graficar_texto(0,31.9,"32");    
 
     radar.graficar_texto(0,15,"NORTE");    
     radar.graficar_texto(15,0,"ESTE");    
@@ -190,12 +193,14 @@ window.onload = function () {
     radar.graficar_texto(-15,0,"OESTE");
 
     radar.graficar_linea([0,0],[25,25],"solid");
+    radar.graficar_linea([0,-32],[0,32],"solid");
 
     workerSocket.onmessage = (event) => {
         graficarPunto(event.data);
     };
 
     let escala = 32;
+    // Canvas visible
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
@@ -215,42 +220,41 @@ window.onload = function () {
     let centroCanvasX = canvasCrudo.width / 2;
     let centroCanvasY = canvasCrudo.height / 2;
 
-    /* let canvasData = contextCrudo.getImageData(0, 0, canvasCrudo.width, canvasCrudo.height);
+    graficarSintetico(150,150);
 
-     function drawPixel(x ,y ,r,g,b,a){
-         var index = (x + y * canvasCrudo.width) * 4;
-
-         canvasData.data[index + 0] = r;
-         canvasData.data[index + 1] = g;
-         canvasData.data[index + 2] = b;
-         canvasData.data[index + 3] = a;
-    }*/
+    function graficarSintetico(x,y){
+        let textos = radar.getFormattedText();        
+        //Funcion colocar textos en canvas
+        ctx.font = "10px serif";
+        ctx.fillStyle = "white";
+        let textData; let text_x; let text_y;
+        textos.forEach((text) => {
+            textData = text[2];
+            text_x =(text[0]*(400/escala))+400-x;
+            text_y =(-text[1]*(400/escala))+400-y;
+            ctx.textAlign = "start";
+            ctx.fillText(textData,text_x+15,text_y+8);
+        });       
+    }
 
     function graficarPunto(data) {
-
         data.forEach((punto) => {
             const puntoJson = JSON.parse(punto);
             let coordX = puntoJson.coordenadaX;
             let coordY = puntoJson.coordenadaY;
             let color = puntoJson.color;
-
-            let indice = escalaOrigen.indexOf(escala);
             
-            if (coordX != "H") {
-                contextCrudo.fillStyle = ESCALA_COLOR[color];
-                contextCrudo.fillRect(coordX,coordY,1,1);
-            }
+            contextCrudo.fillStyle = ESCALA_COLOR[color];
+            contextCrudo.fillRect(coordX,coordY,1,1);
         });
 
-     //   contextCrudo.putImageData(canvasData, 0, 0);
-
         escalaActual = radar.escala_DM; // * 4;
-        //escalaActual = 32;
-        // escalaActual = document.querySelector('input[name="escala"]:checked').value; //*4;
+
         if (escala != escalaActual) {
             contextCrudo.clearRect(0, 0, canvasCrudo.width, canvasCrudo.height);
             ctx.clearRect(0, 0, canvas.width, canvas.height)
             escala = escalaActual;
+            graficarSintetico(0,0);
         }
 
         // let distancia = 256 - escala;
@@ -263,7 +267,6 @@ window.onload = function () {
         copiarCanvas();
     }
 
-   // copiarCanvas();
     
 
     // Crear una instancia de Coordenadas
@@ -327,7 +330,10 @@ window.onload = function () {
         let anchoEnPixel = (ancho * (canvasCrudo.width / 2)) / 256;
 
         ctx.drawImage(canvasCrudo, sx, sy, anchoEnPixel, anchoEnPixel, 0, 0, canvas.width, canvas.height);
-
+        console.table([sx,sy]);
+        let ax = centroCanvasX;
+        let ay = centroCanvasY;
+        graficarSintetico(ax,ay);
     }
    
 
@@ -344,7 +350,6 @@ window.onload = function () {
             var h = canvas.height;
 
             ct.clearRect(0, 0, w, h);
-
         });
     });
 
