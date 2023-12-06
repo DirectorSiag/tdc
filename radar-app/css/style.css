@@ -456,6 +456,20 @@ html, body {
     overflow: hidden;
   }
 
+  #canvas_sintetico {
+    /* border: 1px solid #fbff00; */
+    /* width: 702px;
+    height: 702px; */
+  
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  
+    transform: translate(-50%, -50%);
+  
+    overflow: hidden;
+  }
+
   .contenedor_crudo{
     color: white;
   }

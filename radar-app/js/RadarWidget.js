@@ -45,6 +45,7 @@ class RadarWidget {
         this.rollball_DY_temp = undefined;
 
         this.formatted_text = [];
+        this.formatted_img = [];
         
         // Diccionarios
         this.LPD_symbols_table = {
@@ -366,8 +367,8 @@ class RadarWidget {
         this.on_click = function (event, $this) {
 
             if (event.altKey) {
-                this.coordenadas.x = 0;
-                this.coordenadas.y = 0;
+                this.coordenadas.x = 400;
+                this.coordenadas.y = 400;
                 return;
             }
             
@@ -684,7 +685,7 @@ class RadarWidget {
         var last_child = this.add_element(this.text_list, "p", {
             "className": "text",
             "textContent": texto,
-            "hidden": false
+            "hidden": true
         });
 
         this.formatted_text.push([x,y,texto]);
@@ -694,6 +695,10 @@ class RadarWidget {
 
     getFormattedText(){
         return this.formatted_text;
+    }
+
+    getFormattedImg(){
+        return this.formatted_img;
     }
 
     plot_imagen(x, y, nombre_png, format) {
@@ -709,8 +714,11 @@ class RadarWidget {
             "className": "image",
             "src": url,
             "alt": nombre_png,
-            "style": "width:" + width + "px;height:" + height + "px"
+            "style": "width:" + width + "px;height:" + height + "px",
+            "hidden": true
         });
+
+        this.formatted_img.push([x,y,url]);
         //le resto el centro de la imagen, esto debido a que la imagen se
         //plotea desde la esquina superior
         this.center_to_radar(x, y, last_child,width / 2, height / 2);

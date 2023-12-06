@@ -185,7 +185,15 @@ window.onload = function () {
     radar.graficar_texto(1,1,"1");    
     radar.graficar_texto(2,2,"2");    
     radar.graficar_texto(3,3,"3");    
-    radar.graficar_texto(0,31.9,"32");    
+    radar.graficar_texto(4,4,"4");    
+    radar.graficar_texto(5,5,"5");    
+    radar.graficar_texto(6,6,"6");    
+    radar.graficar_texto(7,7,"7");    
+    radar.graficar_texto(8,8,"8");    
+    radar.graficar_texto(9,9,"9");    
+    radar.graficar_texto(10,10,"10");    
+    radar.graficar_texto(11,11,"11");    
+    radar.graficar_texto(12,12,"12");     
 
     radar.graficar_texto(0,15,"NORTE");    
     radar.graficar_texto(15,0,"ESTE");    
@@ -195,6 +203,9 @@ window.onload = function () {
     radar.graficar_linea([0,0],[25,25],"solid");
     radar.graficar_linea([0,-32],[0,32],"solid");
 
+    radar.plot_imagen(0,0,"pdr_fix","png");
+    radar.plot_imagen(12,-6,"0001011","png");
+
     workerSocket.onmessage = (event) => {
         graficarPunto(event.data);
     };
@@ -203,6 +214,9 @@ window.onload = function () {
     // Canvas visible
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
+
+    const sintetico = document.getElementById('canvas_sintetico');
+    const ctx_sintetico = sintetico.getContext('2d');
 
     // buffer canvas
     var canvasCrudo = document.createElement('canvas');
@@ -216,27 +230,46 @@ window.onload = function () {
     let escalaOrigen = [2, 4, 8, 16, 32, 64, 128, 256];
     let escalaTamaño = [1, 1, 1, 1, 1, 6, 6, 6];
     let escalaDestino = [128, 64, 32, 16, 8, 4, 2, 1];
+    //let letratam = [3,3,5,10,20,40,80,160];
     
     let centroCanvasX = canvasCrudo.width / 2;
     let centroCanvasY = canvasCrudo.height / 2;
 
-    graficarSintetico(0,0);
+    graficarSintetico(400,400);
 
+    // Pide a RadarWidget los textos formateados en forma [x,y,texto]
+    // Para cada texto lo pinta en el canvas del crudo
     function graficarSintetico(x,y){
+        graficar_textos(x,y);
+        graficar_imgs(x,y);
+    }
+
+    function graficar_imgs(x,y){
+        let imgs = radar.getFormattedImg();
+        let img_x,img_y;
+        let img = new Image();
+        imgs.forEach((imagen) =>{
+            img_x = (imagen[0]*(400/escala))+x;
+            img_y = (-imagen[1]*(400/escala))+y;
+            img.src = imagen[2];         
+            ctx_sintetico.drawImage(img,
+                    img_x-(img.width/2),
+                    img_y-(img.height/2));
+        })
+    }
+
+    function graficar_textos(x,y){
         let textos = radar.getFormattedText();        
-        //Funcion colocar textos en canvas
-        contextCrudo.font = "30px serif";
-        contextCrudo.fillStyle = "white";
+        ctx_sintetico.font = "10px serif"
+        ctx_sintetico.fillStyle = "white";
         let textData; let text_x; let text_y;
         textos.forEach((text) => {
             textData = text[2];
-            text_x =(text[0]*escala)+centroCanvasX-x;
-            text_y =(-text[1]*escala)+centroCanvasY-y;
-            contextCrudo.textAlign = "start";
-            contextCrudo.fillText(textData,text_x+15,text_y+8);
-            console.table([textData,text_x,text_y]);
-        });   
-        copiarCanvas();    
+            text_x =(text[0]*(400/escala))+x;   //0.975 corrige el truncado del buffer
+            text_y =(-text[1]*(400/escala))+y;
+            ctx_sintetico.textAlign = "start";
+            ctx_sintetico.fillText(textData,text_x+15,text_y+8); //38 y 19 colocan el texto en el subindice correcto
+        }); 
     }
 
     function graficarPunto(data) {
@@ -247,18 +280,20 @@ window.onload = function () {
             let color = puntoJson.color;
             
             contextCrudo.fillStyle = ESCALA_COLOR[color];
-            contextCrudo.fillRect(coordX,coordY,1,1);
+            contextCrudo.fillRect(coordX,coordY,2,2);
         });
 
         escalaActual = radar.escala_DM; // * 4;
 
         if (escala != escalaActual) {
+            let x = radar.coordenadas._x;
+            let y = radar.coordenadas._y;
             contextCrudo.clearRect(0, 0, canvasCrudo.width, canvasCrudo.height);
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            ctx.clearRect(0, 0, canvas.width, canvas.height);         
             escala = escalaActual;
-            graficarSintetico(0,0);
+            graficarSintetico(x,y);
         }
-
+        ctx_sintetico.clearRect(0, 0, sintetico.width, sintetico.height);
         // let distancia = 256 - escala;
         // let distanciaEnPixel = (distancia * (canvasCrudo.width / 2)) / 256;
 
@@ -278,11 +313,11 @@ window.onload = function () {
     coordenadas.addObserver((x, y) => {
         //console.log(`Las coordenadas han cambiado a: ${x}, ${y}`);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx_sintetico.clearRect(0, 0, sintetico.width, sintetico.height);
         copiarCanvas();
     });
    
     function copiarCanvas() {
-
         //coordenadas x e y en el canvas de pantalla
         let x = radar.coordenadas._x;
         let y = radar.coordenadas._y;
@@ -332,6 +367,7 @@ window.onload = function () {
         let anchoEnPixel = (ancho * (canvasCrudo.width / 2)) / 256;
 
         ctx.drawImage(canvasCrudo, sx, sy, anchoEnPixel, anchoEnPixel, 0, 0, canvas.width, canvas.height);
+        graficarSintetico(x,y);
     }
    
 
@@ -339,6 +375,9 @@ window.onload = function () {
     let escalaRadioButtons = document.getElementsByName('escala');
     escalaRadioButtons.forEach((radioButton) => {
         radioButton.addEventListener('change', () => {
+            let x = radar.coordenadas._x;
+            let y = radar.coordenadas._y;
+
             maxRadio = parseInt(radioButton.value);
 
             var canvas = document.getElementById('canvas');
@@ -348,6 +387,7 @@ window.onload = function () {
             var h = canvas.height;
 
             ct.clearRect(0, 0, w, h);
+            graficarSintetico(x,y);
         });
     });
 
