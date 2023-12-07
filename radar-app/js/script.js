@@ -242,6 +242,31 @@ window.onload = function () {
     function graficarSintetico(x,y){
         graficar_textos(x,y);
         graficar_imgs(x,y);
+        graficar_lineas(x,y);
+    }
+
+    function graficar_lineas(x,y){
+        let lines = radar.getFormattedLine();
+        let puntoA1,puntoA2,puntoB1,puntoB2,tipo_linea;
+        console.table([lines]);
+        lines.forEach((line) =>{
+            puntoA1 = escalate(line[0])+x;
+            puntoA2 = -escalate(line[1])+y;
+            puntoB1 = escalate(line[2])+x;
+            puntoB2 = -escalate(line[3])+y;
+            tipo_linea = line[4];
+
+            ctx_sintetico.beginPath();
+            ctx_sintetico.moveTo(puntoA1,puntoA2);
+            ctx_sintetico.lineTo(puntoB1,puntoB2);
+            ctx_sintetico.strokeStyle = "white";
+            ctx_sintetico.stroke();
+            ctx_sintetico.closePath();
+        });
+    }
+
+    function escalate(n){
+        return n*(400/escala);
     }
 
     function graficar_imgs(x,y){

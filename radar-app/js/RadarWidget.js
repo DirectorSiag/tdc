@@ -46,6 +46,7 @@ class RadarWidget {
 
         this.formatted_text = [];
         this.formatted_img = [];
+        this.formatted_line = [];
         
         // Diccionarios
         this.LPD_symbols_table = {
@@ -701,6 +702,10 @@ class RadarWidget {
         return this.formatted_img;
     }
 
+    getFormattedLine(){
+        return this.formatted_line;
+    }
+
     plot_imagen(x, y, nombre_png, format) {
         /*
         Grafica un simbolo (formato png) sobre el radar en las
@@ -744,7 +749,7 @@ class RadarWidget {
         var radarRect = this.get_el_coord(this.radar);
         var radar_height = radarRect.height;
 
-        var linea = this.add_element(this.lines_list, "div", { "className": "line" });
+        var linea = this.add_element(this.lines_list, "div", { "className": "line", "hidden": true });
 
         var modulo = this.calc_module(puntoB[0] - puntoA[0], puntoB[1] - puntoA[1]);
         var angulo = this.calc_angle(puntoB[1] - puntoA[1], puntoB[0] - puntoA[0]);
@@ -763,6 +768,8 @@ class RadarWidget {
 
         var clase_linea = this.tipos_de_linea[tipo_linea];
         linea.classList.add(clase_linea);
+
+        this.formatted_line.push([puntoA[0],puntoA[1],puntoB[0],puntoB[1],tipo_linea]);
     }
 
     graficar_cursores(lista) {
