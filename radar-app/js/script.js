@@ -28,7 +28,7 @@ const PC2_IP = "192.168.1.20";
 const SERVER = 1;
 const CLIENT = 0;
 
-const SYSTEM = "win32"; //process.platform;
+const SYSTEM = process.platform;
 
 const checker_element = document.getElementsByClassName("checker")[0];
 
@@ -180,7 +180,7 @@ window.onload = function () {
 
     // PARA PRUEBA DE SINTETICO
     
-    
+    /*
     radar.graficar_texto(0,0,"0");    
     radar.graficar_texto(1,1,"1");    
     radar.graficar_texto(2,2,"2");    
@@ -205,6 +205,8 @@ window.onload = function () {
 
     radar.plot_imagen(0,0,"pdr_fix","png");
     radar.plot_imagen(12,-6,"0001011","png");
+    */
+    var i = 0;
 
     workerSocket.onmessage = (event) => {
         graficarPunto(event.data);
@@ -237,18 +239,20 @@ window.onload = function () {
 
     graficarSintetico(400,400);
 
-    // Pide a RadarWidget los textos formateados en forma [x,y,texto]
-    // Para cada texto lo pinta en el canvas del crudo
+    // Método cascara que llama graficar todo lo recibido por el sintético
+    // X e Y son las coordenadas que facilitan el descentrado
     function graficarSintetico(x,y){
+        ctx_sintetico.clearRect(0, 0, sintetico.width, sintetico.height);
         graficar_textos(x,y);
         graficar_imgs(x,y);
         graficar_lineas(x,y);
+        //graficar_pointers(x,y);
+        //radar.borrarPuntos();
     }
 
     function graficar_lineas(x,y){
         let lines = radar.getFormattedLine();
         let puntoA1,puntoA2,puntoB1,puntoB2,tipo_linea;
-        console.table([lines]);
         lines.forEach((line) =>{
             puntoA1 = escalate(line[0])+x;
             puntoA2 = -escalate(line[1])+y;
@@ -265,17 +269,33 @@ window.onload = function () {
         });
     }
 
+    //Escala las coordenadas recibidas desde RadarWdiget
     function escalate(n){
-        return n*(400/escala);
+        return n*((sintetico.width/2)/escala);
     }
+
+    /*
+    function graficar_pointers(x,y){
+        let pointers = radar.getFormattedPointers();
+        let pointer_x;
+        let pointer_y;
+        ctx_sintetico.fillStyle = "green";
+
+        pointers.forEach((pointer) => {
+            pointer_x = escalate(pointer[0])+x;
+            pointer_y = -escalate(pointer[1])+y;
+            ctx_sintetico.fillRect(pointer_x,pointer_y,3,3);
+        })
+    }*/
 
     function graficar_imgs(x,y){
         let imgs = radar.getFormattedImg();
         let img_x,img_y;
         let img = new Image();
+        //console.table(imgs);
         imgs.forEach((imagen) =>{
-            img_x = (imagen[0]*(400/escala))+x;
-            img_y = (-imagen[1]*(400/escala))+y;
+            img_x = escalate(imagen[0])+x;
+            img_y = -escalate(imagen[1])+y;
             img.src = imagen[2];         
             ctx_sintetico.drawImage(img,
                     img_x-(img.width/2),
@@ -288,31 +308,42 @@ window.onload = function () {
         ctx_sintetico.font = "10px serif"
         ctx_sintetico.fillStyle = "white";
         let textData; let text_x; let text_y;
+        console.table(textos);
         textos.forEach((text) => {
             textData = text[2];
-            text_x =(text[0]*(400/escala))+x;   //0.975 corrige el truncado del buffer
-            text_y =(-text[1]*(400/escala))+y;
+            text_x =escalate(text[0])+x;  
+            text_y =-escalate(text[1])+y;
             ctx_sintetico.textAlign = "start";
-            ctx_sintetico.fillText(textData,text_x+15,text_y+8); //38 y 19 colocan el texto en el subindice correcto
+            ctx_sintetico.fillText(textData,text_x+15,text_y+8); //15 y 8 colocan el texto en el subindice correcto
         }); 
     }
-
+    
+    var data_cant = 0;
     function graficarPunto(data) {
+        let x = radar.coordenadas._x;
+        let y = radar.coordenadas._y;
         data.forEach((punto) => {
             const puntoJson = JSON.parse(punto);
             let coordX = puntoJson.coordenadaX;
             let coordY = puntoJson.coordenadaY;
             let color = puntoJson.color;
             
+
+
             contextCrudo.fillStyle = ESCALA_COLOR[color];
             contextCrudo.fillRect(coordX,coordY,2,2);
         });
 
+        if(data_cant = 500){
+            graficarSintetico(x,y);
+            data_cant = 0;
+        }
+        data_cant++;
+
         escalaActual = radar.escala_DM; // * 4;
 
         if (escala != escalaActual) {
-            let x = radar.coordenadas._x;
-            let y = radar.coordenadas._y;
+            
             contextCrudo.clearRect(0, 0, canvasCrudo.width, canvasCrudo.height);
             ctx.clearRect(0, 0, canvas.width, canvas.height);         
             escala = escalaActual;

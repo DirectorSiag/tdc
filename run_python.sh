@@ -1,4 +1,6 @@
 PWD=$(pwd)
 
-cd "$PWD/new-software-tdc"
-bin/python3 TDC_logica.py
+cd "$PWD"
+cd ".."
+cd "new-software-tdc"
+python3 TDC_logica.py

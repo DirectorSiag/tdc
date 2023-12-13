@@ -47,7 +47,9 @@ class RadarWidget {
         this.formatted_text = [];
         this.formatted_img = [];
         this.formatted_line = [];
-        
+        this.formatted_pointer = [];
+
+
         // Diccionarios
         this.LPD_symbols_table = {
             // Superficie
@@ -367,7 +369,7 @@ class RadarWidget {
 
         this.on_click = function (event, $this) {
 
-            if (event.altKey) {
+            if (event.shiftKey) {
                 this.coordenadas.x = 400;
                 this.coordenadas.y = 400;
                 return;
@@ -383,7 +385,7 @@ class RadarWidget {
             mouse_y = 512 * (radarRect['y'] + radarRect['height'] / 2 - mouse_y) / radarRect['height'];
 
             if (event.ctrlKey) {
-                console.log("Toco tecla Ctrl");
+                //console.log("Toco tecla Ctrl");
                 $this.rollball_DX_temp = mouse_x;
                 $this.rollball_DY_temp = mouse_y;
 
@@ -407,7 +409,7 @@ class RadarWidget {
                 // Quite la restriccion de que el modulo sea < a 256 porque
                 // no se puede hacer click afuera del radar.
                 if (event.button == 0) { // Click izquierdo
-                    console.log("Toco click izquierdo");
+                    //console.log("Toco click izquierdo");
                     if ($this.ROLE == "main") {
                         var delta_x = mouse_x - ($this.coordenada_rolling_L[0] - $this.origen_x) * 256 / $this.escala_DM;
                         var delta_y = mouse_y - ($this.coordenada_rolling_L[1] - $this.origen_y) * 256 / $this.escala_DM;
@@ -415,11 +417,6 @@ class RadarWidget {
                         var delta_x = mouse_x - ($this.coordenada_rolling_R[0] - $this.origen_x) * 256 / $this.escala_DM;
                         var delta_y = mouse_y - ($this.coordenada_rolling_R[1] - $this.origen_y) * 256 / $this.escala_DM;
                     }
-
-                    console.log("Delta_x: "+delta_x); 
-                    console.log("Mouse_x: "+mouse_x); 
-                    console.log("coordenada_rolling_L[0]: "+$this.coordenada_rolling_L[0]); 
-                    console.log("coordenada_rolling_L[1]: "+$this.coordenada_rolling_L[1]); 
 
                     let control_var_x = $this.calc_control_var(delta_x);
                     let control_var_y = $this.calc_control_var(delta_y);
@@ -555,6 +552,7 @@ class RadarWidget {
         var last_pointer = this.add_element(this.pointer_list, "div", { "className": "pointer" });
 
         this.center_to_radar(x, y, last_pointer, 2, 2);
+        this.formatted_pointer.push([x,y]);
     }
 
     borrarPuntos() {
@@ -565,6 +563,11 @@ class RadarWidget {
         this.text_list.textContent = '';
         this.image_list.textContent = '';
         this.lines_list.textContent = '';
+
+        this.formatted_text = [];
+        this.formatted_img = [];
+        this.formatted_line = [];
+
     }
 
     set_origen_x_y(lista1) {
@@ -683,15 +686,16 @@ class RadarWidget {
         /*
         Grafica un texto sobre el radar en las coordenadas x e y.
         */
+       /*
         var last_child = this.add_element(this.text_list, "p", {
             "className": "text",
             "textContent": texto,
             "hidden": true
         });
-
+*/
         this.formatted_text.push([x,y,texto]);
 
-        this.center_to_radar(x, y, last_child, x_delta_px, x_delta_py);
+        //this.center_to_radar(x, y, last_child, x_delta_px, x_delta_py);
     }
 
     getFormattedText(){
@@ -706,6 +710,10 @@ class RadarWidget {
         return this.formatted_line;
     }
 
+    getFormattedPointers(){
+        return this.formatted_pointer;
+    }
+
     plot_imagen(x, y, nombre_png, format) {
         /*
         Grafica un simbolo (formato png) sobre el radar en las
@@ -715,6 +723,7 @@ class RadarWidget {
         var url = "images/new/" + nombre_png + "." + format;
 
         var [width, height] = this.get_image_size();
+        /*
         var last_child = this.add_element(this.image_list, "img", {
             "className": "image",
             "src": url,
@@ -722,11 +731,12 @@ class RadarWidget {
             "style": "width:" + width + "px;height:" + height + "px",
             "hidden": true
         });
+        */
 
         this.formatted_img.push([x,y,url]);
         //le resto el centro de la imagen, esto debido a que la imagen se
         //plotea desde la esquina superior
-        this.center_to_radar(x, y, last_child,width / 2, height / 2);
+        //this.center_to_radar(x, y, last_child,width / 2, height / 2);
     }
 
     graficar_linea(puntoA, puntoB, tipo_linea) {
@@ -749,25 +759,25 @@ class RadarWidget {
         var radarRect = this.get_el_coord(this.radar);
         var radar_height = radarRect.height;
 
-        var linea = this.add_element(this.lines_list, "div", { "className": "line", "hidden": true });
+        //var linea = this.add_element(this.lines_list, "div", { "className": "line", "hidden": true });
 
         var modulo = this.calc_module(puntoB[0] - puntoA[0], puntoB[1] - puntoA[1]);
         var angulo = this.calc_angle(puntoB[1] - puntoA[1], puntoB[0] - puntoA[0]);
         // En el calculo del angulo va primero 'y' y despues 'x'
         //console.log('modulo:',modulo,'\nangulo:',angulo);
         
-        linea.style.height = modulo + "px";
-        linea.style.webkitTransform = 'rotate(' + angulo + 'rad)';
-        linea.style.transform = 'rotate(' + angulo + 'rad)';
+        //linea.style.height = modulo + "px";
+        //linea.style.webkitTransform = 'rotate(' + angulo + 'rad)';
+        //linea.style.transform = 'rotate(' + angulo + 'rad)';
 
         let y = (radar_height / 2) + puntoA[1];
         let x = (radar_height / 2) + puntoA[0];
         //console.log('posx:',x,'\nposy:',y);
-        linea.style.bottom = y + "px";
-        linea.style.left = x + "px";
+        //linea.style.bottom = y + "px";
+        //linea.style.left = x + "px";
 
         var clase_linea = this.tipos_de_linea[tipo_linea];
-        linea.classList.add(clase_linea);
+        //linea.classList.add(clase_linea);
 
         this.formatted_line.push([puntoA[0],puntoA[1],puntoB[0],puntoB[1],tipo_linea]);
     }

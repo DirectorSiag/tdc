@@ -151,7 +151,7 @@ class TDClogica {
             if (ack_o_msj == 0) {        //si el mensaje recibido es MSJ 
                 if (device_add == 0x0) {     //mensaje de la LPD
 
-                    console.log("Mensajes:", this.mensajes_LPD.length);
+                    //console.log("Mensajes:", this.mensajes_LPD.length);
                     //if (len(this.mensajes_LPD) < 150){
                     this.mensajes_LPD.push(mensaje);
                     this.mensajes_LPD_Len.push(nro_sec_bin);
