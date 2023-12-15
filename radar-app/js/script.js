@@ -180,7 +180,6 @@ window.onload = function () {
 
     // PARA PRUEBA DE SINTETICO
     
-    /*
     radar.graficar_texto(0,0,"0");    
     radar.graficar_texto(1,1,"1");    
     radar.graficar_texto(2,2,"2");    
@@ -205,8 +204,7 @@ window.onload = function () {
 
     radar.plot_imagen(0,0,"pdr_fix","png");
     radar.plot_imagen(12,-6,"0001011","png");
-    */
-    var i = 0;
+    
 
     workerSocket.onmessage = (event) => {
         graficarPunto(event.data);
@@ -217,6 +215,7 @@ window.onload = function () {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
+    // Canvas del sintetico
     const sintetico = document.getElementById('canvas_sintetico');
     const ctx_sintetico = sintetico.getContext('2d');
 
@@ -232,7 +231,6 @@ window.onload = function () {
     let escalaOrigen = [2, 4, 8, 16, 32, 64, 128, 256];
     let escalaTamaño = [1, 1, 1, 1, 1, 6, 6, 6];
     let escalaDestino = [128, 64, 32, 16, 8, 4, 2, 1];
-    //let letratam = [3,3,5,10,20,40,80,160];
     
     let centroCanvasX = canvasCrudo.width / 2;
     let centroCanvasY = canvasCrudo.height / 2;
@@ -246,10 +244,18 @@ window.onload = function () {
         graficar_textos(x,y);
         graficar_imgs(x,y);
         graficar_lineas(x,y);
-        //graficar_pointers(x,y);
+        graficar_pointers(x,y);
         //radar.borrarPuntos();
     }
 
+    //Escala las coordenadas recibidas desde RadarWdiget
+    function escalate(n){
+        return n*((sintetico.width/2)/escala);
+    }
+
+    // Cada una de las siguientes funciones requiere los datos formateados desde RadarWidget
+    //y dibuja en el canvas del sintetico la información recibida de lineas, pointers,
+    //imágenes y textos
     function graficar_lineas(x,y){
         let lines = radar.getFormattedLine();
         let puntoA1,puntoA2,puntoB1,puntoB2,tipo_linea;
@@ -268,13 +274,7 @@ window.onload = function () {
             ctx_sintetico.closePath();
         });
     }
-
-    //Escala las coordenadas recibidas desde RadarWdiget
-    function escalate(n){
-        return n*((sintetico.width/2)/escala);
-    }
-
-    /*
+    
     function graficar_pointers(x,y){
         let pointers = radar.getFormattedPointers();
         let pointer_x;
@@ -286,7 +286,7 @@ window.onload = function () {
             pointer_y = -escalate(pointer[1])+y;
             ctx_sintetico.fillRect(pointer_x,pointer_y,3,3);
         })
-    }*/
+    }
 
     function graficar_imgs(x,y){
         let imgs = radar.getFormattedImg();
@@ -308,7 +308,7 @@ window.onload = function () {
         ctx_sintetico.font = "10px serif"
         ctx_sintetico.fillStyle = "white";
         let textData; let text_x; let text_y;
-        console.table(textos);
+        //console.table(textos);
         textos.forEach((text) => {
             textData = text[2];
             text_x =escalate(text[0])+x;  
@@ -327,14 +327,13 @@ window.onload = function () {
             let coordX = puntoJson.coordenadaX;
             let coordY = puntoJson.coordenadaY;
             let color = puntoJson.color;
-            
-
-
+        
             contextCrudo.fillStyle = ESCALA_COLOR[color];
             contextCrudo.fillRect(coordX,coordY,2,2);
         });
 
-        if(data_cant = 500){
+        //Actualizamos la imagen del canvas sintetico cada 500 muestras recibidas del crudo
+        if(data_cant == 500){
             graficarSintetico(x,y);
             data_cant = 0;
         }

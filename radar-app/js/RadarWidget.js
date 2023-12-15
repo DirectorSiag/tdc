@@ -567,6 +567,7 @@ class RadarWidget {
         this.formatted_text = [];
         this.formatted_img = [];
         this.formatted_line = [];
+        this.formatted_pointer = [];
 
     }
 
