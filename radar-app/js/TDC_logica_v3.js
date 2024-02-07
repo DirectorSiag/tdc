@@ -1,10 +1,10 @@
 
-
+/*
+Esta es la clase principal, la encargada de implementar la logica de la 
+tactica, y su comunicacion con la FPGA
+*/
 class TDClogica {
-    /*
-    esta es la clase principal, la encargada de implementar la logica de la 
-    tactica, y su comunicacion con la FPGA
-    */
+    
     constructor(radarInterfaz, azimutInput, distanciaInput) {
         this.radarInterfaz = radarInterfaz;
         this.azimutInput = azimutInput;
@@ -16,6 +16,7 @@ class TDClogica {
         */
         //this.matriz_AND1 = Array(16).fill().map(() => Array(32).fill(" "));//matriz de la AND auxiliar
         //this.matriz_AND2 = Array(16).fill().map(() => Array(32).fill(" "));
+
         this.matriz_AND1 = "";
         this.matriz_AND2 = "";
 
@@ -61,7 +62,6 @@ class TDClogica {
         //--------------------------------------------------    
         //           Envía el mensaje a la FPGA                                
         //--------------------------------------------------    
-
 
         this.codificar_bytearray = function (mensaje) {    //funcion que convierte la palabra mensaje "10010...01" a un bytearray para poder mandarla por el socket
             var leng = Math.round((mensaje.length) / 8);
@@ -390,9 +390,6 @@ class TDClogica {
 
                     //this.gui.mostrarAzimut(this.gui.RadarWidget.CoordenadaHnadwheel[0])
                     //this.gui.mostrarDistancia(this.gui.RadarWidget.CoordenadaHnadwheel[1])
-
-
-
 
                     //console.log("AB1:", this.lista_AB1);
                     //console.log("AB2:", this.lista_AB2);

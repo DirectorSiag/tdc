@@ -38,7 +38,10 @@ const LISTA_COLORES = ['#000000', '#800020', '#FF0000', '#FFA500', '#FFFF00', '#
 const NIVELES = LISTA_COLORES.length; //cantidad de tonalidades o colores en la escala a generar
 
 //Se genera la escala de color según lista de colores y la cantidad de niveles de color 
+
+//---> NO ES NECESARIO USAR ESA LIBRERIA (d3) PARA SOLAMENTE HACER UN MAPEO DE COLORES, CAMBIAR A FUTURO <---
 const ESCALA_COLOR = d3.range(NIVELES).map((d) => d3.interpolateRgbBasis(LISTA_COLORES)(d / (NIVELES - 1)));
+
 
 // Valores por defecto, las variables seran asignadas despues tomando sus valores desde el archivo
 // Las variables del puerto separadas son utiles para depuracion de las dos aplicaciones en una misma computadora
