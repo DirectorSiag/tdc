@@ -1,15 +1,14 @@
+// IMPORTACIONES
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 const fs = require("fs");
 
-// IMPORTACIONES
-
+// CONSTANTES
 const CONFIG_LINES = 10;
 
-// CONSTANTES
-
-var status = 0; // Variable utilizada para cerrar la ventana
 // VARIABLES GLOBALES
+var status = 0; // Variable utilizada para cerrar la ventana
+
 
 function readFile(filepath) {
   /*
@@ -95,7 +94,6 @@ app.on('window-all-closed', function () {
 });
 
 // Eventos de comunicacion IPC entre las ventanas y Electron.
-
 ipcMain.on("closed", _ => {
   status = 1;
   app.quit();

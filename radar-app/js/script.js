@@ -32,16 +32,13 @@ const SYSTEM = process.platform;
 
 const checker_element = document.getElementsByClassName("checker")[0];
 
-
-/////               NUEVA ESCALA DE COLOR                  /////////////////////////////////////
 //LISTA = negro, bordó, rojo, naranja, amarillo, blanco
 const LISTA_COLORES = ['#000000', '#800020', '#FF0000', '#FFA500', '#FFFF00', '#FFFFFF'];
 
 const NIVELES = LISTA_COLORES.length; //cantidad de tonalidades o colores en la escala a generar
+
 //Se genera la escala de color según lista de colores y la cantidad de niveles de color 
 const ESCALA_COLOR = d3.range(NIVELES).map((d) => d3.interpolateRgbBasis(LISTA_COLORES)(d / (NIVELES - 1)));
-
-////////////////////----------------------//////////////////////////////////////////////////////
 
 // Valores por defecto, las variables seran asignadas despues tomando sus valores desde el archivo
 // Las variables del puerto separadas son utiles para depuracion de las dos aplicaciones en una misma computadora
@@ -82,6 +79,9 @@ function readFile(filepath) {
 // Esta funcion se ejecuta cuando la pagina termina de cargar. 
 window.onload = function () {    
     // Cada linea representa el valor de una variable
+    /**
+     * Esta funcion es para el archivo .config donde se separa por  "|" cada parametro
+     */
     let file_content = readFile(`${__dirname}/../.config`);
     file_content = file_content.split("|");
 
@@ -105,9 +105,6 @@ window.onload = function () {
     radar.set_listener(); // Esto es del onclick
 
     //let crudo = new RadarWidget(ROLE,'crudo');
-
-    ////////////////////----------------//////////////////////////////////////////////////////////
-
 
     if (ROLE == "main") {
 
@@ -168,12 +165,11 @@ window.onload = function () {
     var lp = new LangProt(socketPython, radar);
 
 
-    //////////////////////////////////////////////////////////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    /////               NUEVO CÓDIGO                     /////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////
+    ///////////////////////////////////////////////////////////
+    /////                                                //////
+    /////               NUEVO CÓDIGO                     //////
+    /////                                                //////
+    ///////////////////////////////////////////////////////////
 
     const workerSocket = new Worker('./js/wkrSocket.js');
 
@@ -349,17 +345,15 @@ window.onload = function () {
             graficarSintetico(x,y);
         }
         ctx_sintetico.clearRect(0, 0, sintetico.width, sintetico.height);
-        // let distancia = 256 - escala;
-        // let distanciaEnPixel = (distancia * (canvasCrudo.width / 2)) / 256;
+        /** let distancia = 256 - escala;
+         let distanciaEnPixel = (distancia * (canvasCrudo.width / 2)) / 256;
 
-        // let ancho = escala * 2;
-        // let anchoEnPixel = (ancho * (canvasCrudo.width / 2)) / 256;
-        // ctx.drawImage(canvasCrudo, distanciaEnPixel, distanciaEnPixel, anchoEnPixel, anchoEnPixel, 0, 0, canvas.width, canvas.height);
-
+         let ancho = escala * 2;
+         let anchoEnPixel = (ancho * (canvasCrudo.width / 2)) / 256;
+         ctx.drawImage(canvasCrudo, distanciaEnPixel, distanciaEnPixel, anchoEnPixel, anchoEnPixel, 0, 0, canvas.width, canvas.height);
+        */
         copiarCanvas();
     }
-
-    
 
     // Crear una instancia de Coordenadas
     let coordenadas = radar.coordenadas;
@@ -446,14 +440,11 @@ window.onload = function () {
         });
     });
 
-    //////////////////////////////////////////////////////////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    /////               FIN NUEVO CÓDIGO                 /////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    /////                                                /////////////////////////////////////
-    //////////////////////////////////////////////////////////////////////////////////////////
-
-
+    //////////////////////////////////////////////////////////
+    /////                                                /////
+    /////               FIN NUEVO CÓDIGO                 /////
+    /////                                                /////
+    //////////////////////////////////////////////////////////
 
     function on_ready_callback_FPGA_UDP() {
         /*

@@ -46,9 +46,9 @@ class Socket {
                 // Reasignacion de la variable socket con la actualizacion de la conexion
 
                 console.log("Cliente conectado, puerto: " + $this.PORT_HOST);
-
-                $this.send_message("ACK");
+                
                 // Envia un ACK de confirmacion
+                $this.send_message("ACK");
 
                 socket.on($this.msg_identifier, function(data) {
                     $this.read_callback(data, "/");
